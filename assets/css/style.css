@@ -1,0 +1,184 @@
+@import url('design-system.css');
+
+body {
+    background: linear-gradient(rgba(26, 95, 63, 0.85), rgba(15, 76, 58, 0.85)), url('img/vineyard-6399505_1920.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: var(--spacing-5);
+}
+
+h2 {
+    color: var(--color-neutral-900);
+    text-align: center;
+    margin-bottom: var(--spacing-6);
+}
+
+h3 {
+    color: var(--color-neutral-900);
+    margin-bottom: var(--spacing-4);
+}
+
+form {
+    background: white;
+    padding: var(--spacing-10);
+    margin: var(--spacing-8) auto;
+    max-width: 500px;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    transition: transform var(--transition-slow), box-shadow var(--transition-slow);
+}
+
+form:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-2xl);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    margin-bottom: var(--spacing-4);
+}
+
+input:last-of-type,
+textarea:last-of-type,
+select:last-of-type {
+    margin-bottom: 0;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: var(--font-family-base);
+}
+
+button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+    background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+    color: white;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    margin-top: var(--spacing-4);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--color-secondary-500) 0%, var(--color-primary-500) 100%);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-base);
+}
+
+button:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+nav {
+    background: white;
+    padding: var(--spacing-6);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    margin: var(--spacing-8) auto;
+    max-width: 900px;
+    text-align: center;
+}
+
+nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    white-space: nowrap;
+    background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+    color: white;
+    box-shadow: var(--shadow-md);
+    margin: 0 var(--spacing-2);
+}
+
+nav a:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--color-secondary-500) 0%, var(--color-primary-500) 100%);
+    text-decoration: none;
+}
+
+nav a:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+.table-container {
+    max-width: 1200px;
+    margin: var(--spacing-8) auto;
+}
+
+.alert {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-3);
+    }
+    
+    form {
+        padding: var(--spacing-6);
+        margin: var(--spacing-4) auto;
+    }
+    
+    nav {
+        padding: var(--spacing-4);
+    }
+    
+    nav a {
+        display: block;
+        width: 100%;
+        margin: var(--spacing-2) 0;
+    }
+    
+    .table-container {
+        font-size: var(--font-size-sm);
+    }
+    
+    th, td {
+        padding: var(--spacing-3) var(--spacing-2);
+    }
+}

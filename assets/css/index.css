@@ -1,0 +1,208 @@
+body {
+    background: linear-gradient(rgba(26, 95, 63, 0.85), rgba(15, 76, 58, 0.85)), url('img/vineyard-6399505_1920.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: var(--color-neutral-800);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+header {
+    position: relative;
+    width: 100%;
+    min-height: 0;
+}
+
+.top-nav {
+    position: absolute;
+    top: var(--spacing-5);
+    right: var(--spacing-5);
+    left: auto;
+    display: flex !important;
+    gap: var(--spacing-3);
+    z-index: 1000;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    padding: var(--spacing-3) var(--spacing-6) !important;
+    font-size: var(--font-size-base) !important;
+    font-weight: var(--font-weight-semibold) !important;
+    border-radius: var(--radius-sm) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    text-decoration: none !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(12px) saturate(180%);
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: auto !important;
+    min-height: 36px !important;
+    text-align: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    letter-spacing: 0.01em !important;
+    line-height: 1.5 !important;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #00ff00 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    text-decoration: none !important;
+}
+
+.nav-link:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5) !important;
+    outline-offset: 2px !important;
+    text-decoration: none !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.nav-link:visited {
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+
+.nav-link:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+    text-decoration: none !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-12) var(--spacing-8);
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1.main-title {
+    color: #ffffff !important;
+    font-size: var(--font-size-5xl) !important;
+    font-weight: var(--font-weight-bold) !important;
+    margin: 0 0 var(--spacing-6) 0 !important;
+    text-shadow: 0 4px 20px rgba(17, 110, 56, 0.3) !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+.description {
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    max-width: 700px;
+    line-height: var(--line-height-relaxed);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+footer {
+    background: linear-gradient(rgba(26, 95, 63, 0.85), rgba(15, 76, 58, 0.85)), url('img/vineyard-6399505_1920.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: var(--spacing-12) var(--spacing-8);
+    text-align: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.copyright {
+    background: white;
+}
+
+footer div {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+footer h3 {
+    color: var(--color-neutral-50);
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-6);
+    font-weight: var(--font-weight-bold);
+}
+
+footer ul {
+    list-style: none;
+    padding: 0;
+}
+
+footer ul li {
+    padding: var(--spacing-4);
+    margin: var(--spacing-2) 0;
+    background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-base);
+}
+
+footer ul li:hover {
+    transform: translateX(var(--spacing-2));
+    box-shadow: var(--shadow-lg);
+}
+
+footer ul li::before {
+    content: "✓ ";
+    font-weight: var(--font-weight-bold);
+    margin-right: var(--spacing-2);
+}
+
+@media (max-width: 768px) {
+    .top-nav {
+        top: var(--spacing-4);
+        right: var(--spacing-4);
+        left: auto;
+        gap: var(--spacing-2);
+    }
+    
+    .nav-link {
+        padding: var(--spacing-2) var(--spacing-4);
+        font-size: var(--font-size-sm);
+        min-height: 32px;
+    }
+    
+    section {
+        padding: var(--spacing-8) var(--spacing-4);
+    }
+    
+    .main-title {
+        font-size: var(--font-size-3xl);
+        margin-bottom: var(--spacing-4);
+    }
+    
+    .description {
+        font-size: var(--font-size-base);
+    }
+    
+    footer {
+        padding: var(--spacing-8) var(--spacing-4);
+    }
+    
+    footer h3 {
+        font-size: var(--font-size-xl);
+    }
+}

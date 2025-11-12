@@ -1,0 +1,289 @@
+@import url('design-system.css');
+
+body {
+    background: linear-gradient(rgba(26, 95, 63, 0.85), rgba(15, 76, 58, 0.85)), url('img/vineyard-6399505_1920.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: var(--spacing-5);
+}
+
+h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: var(--spacing-8);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.table-container {
+    max-width: 1400px;
+    margin: var(--spacing-8) auto;
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+thead {
+    background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+}
+
+th {
+    padding: var(--spacing-5);
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: var(--border-width-thick) solid var(--color-primary-700);
+}
+
+th:first-child {
+    padding-left: var(--spacing-6);
+}
+
+th:last-child {
+    padding-right: var(--spacing-6);
+}
+
+td {
+    padding: var(--spacing-5);
+    border-bottom: var(--border-width-thin) solid var(--color-neutral-200);
+    color: var(--color-neutral-700);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+}
+
+td:first-child {
+    padding-left: var(--spacing-6);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-neutral-900);
+}
+
+td:last-child {
+    padding-right: var(--spacing-6);
+}
+
+tbody tr {
+    transition: background-color var(--transition-fast);
+}
+
+tbody tr:hover {
+    background-color: var(--color-primary-50);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--color-neutral-50);
+}
+
+tbody tr:nth-child(even):hover {
+    background-color: var(--color-primary-50);
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-16);
+    color: var(--color-neutral-500);
+    font-size: var(--font-size-lg);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-8);
+    padding: var(--spacing-3) var(--spacing-6);
+    background: white;
+    color: var(--color-primary-500);
+    border: var(--border-width-base) solid var(--color-primary-500);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.back-link:hover {
+    background: var(--color-primary-500);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+}
+
+.back-link:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+.back-link-container {
+    text-align: center;
+    margin-top: var(--spacing-8);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.actions-cell {
+    white-space: nowrap;
+    text-align: center;
+    padding: var(--spacing-2);
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    gap: var(--spacing-1);
+    padding: 0;
+    margin: 0 var(--spacing-1);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-edit {
+    background: var(--color-success-dark);
+    color: white;
+}
+
+.btn-edit:hover {
+    background: var(--color-success-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    opacity: 0.9;
+}
+
+.btn-delete {
+    background: var(--color-success-dark);
+    color: white;
+}
+
+.btn-delete:hover {
+    background: var(--color-success-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    opacity: 0.9;
+}
+
+.btn-action:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+.vencido {
+    color: var(--color-error);
+    font-weight: var(--font-weight-semibold);
+}
+
+.proximo-vencimento {
+    color: var(--color-warning);
+    font-weight: var(--font-weight-semibold);
+}
+
+.badge {
+    display: inline-block;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    margin-left: var(--spacing-2);
+}
+
+.badge-danger {
+    background-color: var(--color-error);
+    color: white;
+}
+
+.badge-warning {
+    background-color: var(--color-warning);
+    color: white;
+}
+
+.alert {
+    max-width: 800px;
+    margin: 0 auto var(--spacing-6);
+}
+
+@media (max-width: 1024px) {
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-3);
+    }
+    
+    h2 {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--spacing-6);
+    }
+    
+    .table-container {
+        border-radius: var(--radius-lg);
+    }
+    
+    th, td {
+        padding: var(--spacing-3) var(--spacing-2);
+        font-size: var(--font-size-sm);
+    }
+    
+    th:first-child,
+    td:first-child {
+        padding-left: var(--spacing-3);
+    }
+    
+    th:last-child,
+    td:last-child {
+        padding-right: var(--spacing-3);
+    }
+    
+    .empty-state {
+        padding: var(--spacing-8);
+        font-size: var(--font-size-base);
+    }
+    
+    .back-link {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    th {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-2);
+    }
+    
+    td {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-2);
+    }
+}
+
