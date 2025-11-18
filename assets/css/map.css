@@ -1,0 +1,48 @@
+.map-container {
+    width: 90%;
+    max-width: 600px; /* limita o tamanho máximo em telas grandes */
+    height: 300px; /* altura reduzida */
+    margin: 20px auto; /* centraliza horizontalmente */
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* iframe ocupa todo o espaço do contêiner */
+  .map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .propriedade-map {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-xl);
+    margin-top: var(--spacing-16);
+    margin-bottom: var(--spacing-8);
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+    border-radius: 12px;
+}
+
+.propriedade-map iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: var(--radius-xl);
+  }
+  
+  /* Ajustes para telas menores */
+  @media (max-width: 600px) {
+    .map-container {
+      width: 95%;
+      height: 250px; /* reduz um pouco mais em celulares */
+    }
+  }
+  

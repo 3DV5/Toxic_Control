@@ -19,8 +19,29 @@ if (isset($_GET['erro'])) {
     $erro = htmlspecialchars($_GET['erro']);
 }
 
-// Buscar registros usando prepared statement
-$stmt = $conn->prepare("SELECT * FROM defensivos WHERE usuario_id = ? ORDER BY data_aplicacao DESC");
+// Verificar se as colunas id_propriedade e id_pasto existem na tabela defensivos
+$check_columns = $conn->query("SHOW COLUMNS FROM defensivos LIKE 'id_propriedade'");
+$has_id_propriedade = $check_columns->num_rows > 0;
+$check_columns = $conn->query("SHOW COLUMNS FROM defensivos LIKE 'id_pasto'");
+$has_id_pasto = $check_columns->num_rows > 0;
+
+// Buscar registros com informações de propriedade e pasto usando JOIN (se as colunas existirem)
+if ($has_id_propriedade && $has_id_pasto) {
+    $stmt = $conn->prepare("SELECT d.*, 
+                            pr.nome as propriedade_nome, 
+                            p.nome as pasto_nome 
+                            FROM defensivos d 
+                            LEFT JOIN propriedades pr ON d.id_propriedade = pr.id_propriedade 
+                            LEFT JOIN pastos p ON d.id_pasto = p.id_pasto 
+                            WHERE d.usuario_id = ? 
+                            ORDER BY d.data_aplicacao DESC");
+} else {
+    // Se as colunas não existirem, fazer query simples sem JOIN
+    $stmt = $conn->prepare("SELECT *, NULL as propriedade_nome, NULL as pasto_nome 
+                            FROM defensivos 
+                            WHERE usuario_id = ? 
+                            ORDER BY data_aplicacao DESC");
+}
 $stmt->bind_param("i", $usuario_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -37,9 +58,14 @@ if (!$result) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registros - Toxic Control</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/header.css">
 <link rel="stylesheet" href="assets/css/view-defensivos.css">
 </head>
 <body>
+<?php 
+$current_page = 'view_defensivos';
+include('includes/header.php'); 
+?>
 <div class="container">
     <h2>Meus Registros de Defensivos</h2>
     <?php if (!empty($sucesso)): ?>
@@ -53,6 +79,8 @@ if (!$result) {
         <thead>
             <tr>
                 <th>Produto</th>
+                <th>Propriedade</th>
+                <th>Pasto/Área</th>
                 <th>Cultura</th>
                 <th>Data Aplicação</th>
                 <th>Dosagem</th>
@@ -93,8 +121,13 @@ if (!$result) {
                         $prazo_validade_formatado = '-';
                     }
                     
+                    $propriedade_nome = !empty($row['propriedade_nome']) ? htmlspecialchars($row['propriedade_nome']) : '-';
+                    $pasto_nome = !empty($row['pasto_nome']) ? htmlspecialchars($row['pasto_nome']) : '-';
+                    
                     echo "<tr>
                             <td>" . htmlspecialchars($row['nome_produto'] ?? '') . "</td>
+                            <td>" . $propriedade_nome . "</td>
+                            <td>" . $pasto_nome . "</td>
                             <td>" . htmlspecialchars($row['cultura'] ?? '-') . "</td>
                             <td>" . htmlspecialchars($data_formatada) . "</td>
                             <td>" . htmlspecialchars($row['dosagem'] ?? '-') . "</td>
@@ -108,7 +141,7 @@ if (!$result) {
                           </tr>";
                 }
             } else {
-                echo "<tr><td colspan='8' class='empty-state'>Nenhum registro encontrado.</td></tr>";
+                echo "<tr><td colspan='10' class='empty-state'>Nenhum registro encontrado.</td></tr>";
             }
             if (isset($stmt)) {
                 $stmt->close();
@@ -122,5 +155,6 @@ if (!$result) {
         <a href="relatorios.php" class="back-link"><i class="fas fa-chart-bar"></i> Gerar Relatórios</a>
     </div>
 </div>
+<script src="assets/js/header.js"></script>
 </body>
 </html>

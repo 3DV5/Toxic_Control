@@ -30,6 +30,17 @@ while ($row = $result_produtos->fetch_assoc()) {
     $produtos[] = $row['nome_produto'];
 }
 $stmt_produtos->close();
+
+// Buscar propriedades para o filtro
+$stmt_propriedades = $conn->prepare("SELECT id_propriedade, nome FROM propriedades WHERE usuario_id = ? AND ativo = 1 ORDER BY nome ASC");
+$stmt_propriedades->bind_param("i", $usuario_id);
+$stmt_propriedades->execute();
+$result_propriedades = $stmt_propriedades->get_result();
+$propriedades = [];
+while ($row = $result_propriedades->fetch_assoc()) {
+    $propriedades[] = $row;
+}
+$stmt_propriedades->close();
 ?>
 
 <!DOCTYPE html>
@@ -39,9 +50,14 @@ $stmt_produtos->close();
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Relatórios - Toxic Control</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/header.css">
 <link rel="stylesheet" href="assets/css/relatorios.css">
 </head>
 <body>
+<?php 
+$current_page = 'relatorios';
+include('includes/header.php'); 
+?>
 <div class="container">
     <div class="header-section">
         <h2><i class="fas fa-chart-bar"></i> Gerar Relatórios</h2>
@@ -86,6 +102,25 @@ $stmt_produtos->close();
                         </select>
                     </div>
                 </div>
+                <?php if (!empty($propriedades)): ?>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_propriedade">Propriedade:</label>
+                        <select id="id_propriedade" name="id_propriedade" class="form-control" onchange="loadPastosRelatorio(this.value)">
+                            <option value="">Todas as propriedades</option>
+                            <?php foreach ($propriedades as $prop): ?>
+                                <option value="<?php echo $prop['id_propriedade']; ?>"><?php echo htmlspecialchars($prop['nome']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_pasto">Pasto/Área:</label>
+                        <select id="id_pasto" name="id_pasto" class="form-control">
+                            <option value="">Todos os pastos/áreas</option>
+                        </select>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
 
             <div class="form-section">
@@ -119,6 +154,35 @@ $stmt_produtos->close();
         </ul>
     </div>
 </div>
+
+<script>
+function loadPastosRelatorio(propriedadeId) {
+    const pastoSelect = document.getElementById('id_pasto');
+    pastoSelect.innerHTML = '<option value="">Carregando...</option>';
+    
+    if (!propriedadeId) {
+        pastoSelect.innerHTML = '<option value="">Todos os pastos/áreas</option>';
+        return;
+    }
+    
+    fetch('get_pastos.php?id_propriedade=' + propriedadeId)
+        .then(response => response.json())
+        .then(data => {
+            pastoSelect.innerHTML = '<option value="">Todos os pastos/áreas</option>';
+            data.forEach(pasto => {
+                const option = document.createElement('option');
+                option.value = pasto.id_pasto;
+                option.textContent = pasto.nome;
+                pastoSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Erro ao carregar pastos:', error);
+            pastoSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+        });
+}
+</script>
+<script src="assets/js/header.js"></script>
 </body>
 </html>
 

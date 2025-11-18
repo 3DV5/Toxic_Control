@@ -1,0 +1,552 @@
+@import url('design-system.css');
+
+body {
+    background: linear-gradient(rgba(26, 95, 63, 0.85), rgba(15, 76, 58, 0.85)), url('img/vineyard-6399505_1920.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: var(--spacing-8);
+    padding-top: 70px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Nav antigo removido - usando header fixo */
+
+/* ===== HEADER DA PROPRIEDADE ===== */
+.propriedade-header {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-xl);
+    margin-top: var(--spacing-16);
+    margin-bottom: var(--spacing-8);
+    position: relative;
+    overflow: hidden;
+}
+
+.propriedade-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--color-primary-500), var(--color-secondary-500));
+}
+
+.propriedade-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.propriedade-header h2 {
+    color: var(--color-primary-700);
+    margin: 0;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    flex: 1;
+}
+
+.propriedade-header h2 i {
+    color: var(--color-primary-500);
+    font-size: var(--font-size-2xl);
+}
+
+.propriedade-location {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: var(--color-neutral-600);
+    font-size: var(--font-size-base);
+    padding: var(--spacing-2) var(--spacing-4);
+    background: var(--color-neutral-100);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-medium);
+}
+
+.propriedade-location i {
+    color: var(--color-primary-500);
+}
+
+.propriedade-descricao-header {
+    color: var(--color-neutral-700);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-6);
+    padding: var(--spacing-4);
+    background: var(--color-neutral-50);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--color-primary-300);
+}
+
+.propriedade-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-6);
+    margin-top: var(--spacing-6);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    background: var(--color-primary-50);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--color-primary-500);
+    transition: all var(--transition-base);
+}
+
+.info-item:hover {
+    background: var(--color-primary-100);
+    transform: translateX(4px);
+}
+
+.info-item i {
+    color: var(--color-primary-600);
+    font-size: var(--font-size-xl);
+    width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.info-item span {
+    color: var(--color-neutral-800);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+.info-item strong {
+    color: var(--color-primary-700);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ===== ALERTAS ===== */
+.alert {
+    max-width: 800px;
+    margin: 0 auto var(--spacing-6);
+    padding: var(--spacing-4) var(--spacing-6);
+    border-radius: var(--radius-md);
+    font-weight: var(--font-weight-medium);
+    box-shadow: var(--shadow-md);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background: var(--color-success-light);
+    color: var(--color-success-dark);
+    border-left: 4px solid var(--color-success);
+}
+
+.alert-error {
+    background: var(--color-error-light);
+    color: var(--color-error-dark);
+    border-left: 4px solid var(--color-error);
+}
+
+/* ===== HEADER ACTIONS ===== */
+.header-actions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: var(--spacing-8);
+    flex-wrap: wrap;
+    gap: var(--spacing-4);
+}
+
+.btn-add-pasto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-primary-700) 100%);
+    color: white;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-base);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-add-pasto:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--color-secondary-500) 0%, var(--color-primary-500) 100%);
+}
+
+.btn-add-pasto:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+.btn-add-pasto i {
+    font-size: var(--font-size-base);
+}
+
+/* ===== GRID DE PASTOS ===== */
+.pastos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-6);
+    margin-top: var(--spacing-6);
+}
+
+/* ===== CARDS DE PASTO ===== */
+.pasto-card-wrapper {
+    position: relative;
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+    overflow: hidden;
+}
+
+.pasto-card-wrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-2xl);
+}
+
+.pasto-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-6);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    position: relative;
+}
+
+.pasto-card:hover {
+    text-decoration: none;
+}
+
+.pasto-card-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-4);
+    padding-right: var(--spacing-12);
+}
+
+.pasto-card h3 {
+    margin: 0;
+    color: var(--color-primary-700);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    flex: 1;
+    line-height: 1.3;
+}
+
+.pasto-card-actions {
+    position: absolute;
+    top: var(--spacing-4);
+    right: var(--spacing-4);
+    display: flex;
+    gap: var(--spacing-2);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.98);
+    padding: var(--spacing-2);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.pasto-descricao {
+    color: var(--color-neutral-700) !important;
+    margin-bottom: var(--spacing-4);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+}
+
+.pasto-card p {
+    color: var(--color-neutral-700);
+    margin-bottom: var(--spacing-4);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+}
+
+.pasto-info {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--color-neutral-200);
+}
+
+.pasto-info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-3);
+    color: var(--color-neutral-800);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+.pasto-info-item:last-child {
+    margin-bottom: 0;
+}
+
+.pasto-info-item i {
+    color: var(--color-primary-600);
+    width: 20px;
+    text-align: center;
+    font-size: var(--font-size-lg);
+}
+
+.pasto-info-item span {
+    color: var(--color-neutral-800);
+    font-weight: var(--font-weight-medium);
+}
+
+.pasto-info-item strong {
+    color: var(--color-primary-700);
+    font-weight: var(--font-weight-semibold);
+}
+
+.pasto-card-footer {
+    margin-top: var(--spacing-4);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--color-neutral-200);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    color: var(--color-primary-600);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-base);
+}
+
+.pasto-card-footer i {
+    transition: transform var(--transition-base);
+}
+
+.pasto-card:hover .pasto-card-footer i {
+    transform: translateX(4px);
+}
+
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    gap: var(--spacing-1);
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+}
+
+.btn-edit {
+    background: var(--color-success-dark);
+    color: white;
+}
+
+.btn-edit:hover {
+    background: var(--color-success-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    opacity: 0.9;
+}
+
+.btn-delete {
+    background: var(--color-error);
+    color: white;
+}
+
+.btn-delete:hover {
+    background: var(--color-error-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    opacity: 0.9;
+}
+
+.btn-action:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* ===== BACK LINK ===== */
+.back-link-container {
+    text-align: center;
+    margin-top: var(--spacing-8);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    background: white;
+    color: var(--color-primary-500);
+    border: var(--border-width-base) solid var(--color-primary-500);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.back-link:hover {
+    background: var(--color-primary-500);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+}
+
+.back-link:focus {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+}
+
+/* ===== ESTADO VAZIO ===== */
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-16);
+    color: var(--color-neutral-500);
+    font-size: var(--font-size-lg);
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    margin-top: var(--spacing-8);
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: var(--color-neutral-300);
+    margin-bottom: var(--spacing-6);
+    display: block;
+}
+
+.empty-state h3 {
+    color: var(--color-neutral-700);
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-3);
+}
+
+.empty-state p {
+    color: var(--color-neutral-600);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-6);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-4);
+        padding-top: 60px;
+    }
+    
+    .propriedade-header {
+        margin-top: var(--spacing-12);
+        padding: var(--spacing-6);
+    }
+    
+    .propriedade-header h2 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .propriedade-info-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+    }
+    
+    .pastos-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+    }
+    
+    .pasto-card {
+        padding: var(--spacing-5);
+        border-radius: var(--radius-lg);
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-add-pasto {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .empty-state {
+        padding: var(--spacing-8);
+        font-size: var(--font-size-base);
+    }
+    
+    .back-link {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: var(--spacing-3);
+        padding-top: 55px;
+    }
+    
+    .pasto-card-header {
+        padding-right: var(--spacing-8);
+    }
+    
+    .pasto-card-actions {
+        top: var(--spacing-2);
+        right: var(--spacing-2);
+        padding: var(--spacing-1);
+        gap: var(--spacing-1);
+    }
+    
+    .btn-action {
+        width: 32px;
+        height: 32px;
+        font-size: var(--font-size-sm);
+    }
+}
+

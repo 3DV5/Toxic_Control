@@ -174,17 +174,16 @@ $stmt->close();
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - Toxic Control</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/header.css">
 <link rel="stylesheet" href="assets/css/dashboard.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
+<?php 
+$current_page = 'dashboard';
+include('includes/header.php'); 
+?>
 <div class="container">
-    <nav>
-        <a href="add_defensivo.php">Registrar Defensivo</a>
-        <a href="view_defensivos.php">Ver Registros</a>
-        <a href="relatorios.php">Relatórios</a>
-        <a href="logout.php">Sair</a>
-    </nav>
     
     <?php if (!empty($defensivos_proximos_vencimento)): ?>
     <!-- Modal de Alerta de Vencimento -->
@@ -697,5 +696,6 @@ $stmt->close();
     }
     <?php endif; ?>
 </script>
+<script src="assets/js/header.js"></script>
 </body>
 </html>

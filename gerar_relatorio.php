@@ -15,41 +15,113 @@ $data_inicio = $_GET['data_inicio'] ?? '';
 $data_fim = $_GET['data_fim'] ?? '';
 $cultura = $_GET['cultura'] ?? '';
 $produto = $_GET['produto'] ?? '';
+$id_propriedade = !empty($_GET['id_propriedade']) ? (int)$_GET['id_propriedade'] : null;
+$id_pasto = !empty($_GET['id_pasto']) ? (int)$_GET['id_pasto'] : null;
 $tipo_relatorio = $_GET['tipo_relatorio'] ?? 'completo';
 
-// Construir query com filtros
-$where_conditions = ["usuario_id = ?"];
-$params = [$usuario_id];
-$types = "i";
+// Verificar se as colunas id_propriedade e id_pasto existem na tabela defensivos
+$check_columns = $conn->query("SHOW COLUMNS FROM defensivos LIKE 'id_propriedade'");
+$has_id_propriedade = $check_columns->num_rows > 0;
+$check_columns = $conn->query("SHOW COLUMNS FROM defensivos LIKE 'id_pasto'");
+$has_id_pasto = $check_columns->num_rows > 0;
 
-if (!empty($data_inicio)) {
-    $where_conditions[] = "data_aplicacao >= ?";
-    $params[] = $data_inicio;
-    $types .= "s";
-}
+// Construir query com filtros (usando alias d. para a tabela defensivos se as colunas existirem)
+$where_conditions = [];
+$params = [];
+$types = "";
 
-if (!empty($data_fim)) {
-    $where_conditions[] = "data_aplicacao <= ?";
-    $params[] = $data_fim;
-    $types .= "s";
-}
-
-if (!empty($cultura)) {
-    $where_conditions[] = "cultura = ?";
-    $params[] = $cultura;
-    $types .= "s";
-}
-
-if (!empty($produto)) {
-    $where_conditions[] = "nome_produto = ?";
-    $params[] = $produto;
-    $types .= "s";
+if ($has_id_propriedade && $has_id_pasto) {
+    $where_conditions[] = "d.usuario_id = ?";
+    $params[] = $usuario_id;
+    $types = "i";
+    
+    if (!empty($data_inicio)) {
+        $where_conditions[] = "d.data_aplicacao >= ?";
+        $params[] = $data_inicio;
+        $types .= "s";
+    }
+    
+    if (!empty($data_fim)) {
+        $where_conditions[] = "d.data_aplicacao <= ?";
+        $params[] = $data_fim;
+        $types .= "s";
+    }
+    
+    if (!empty($cultura)) {
+        $where_conditions[] = "d.cultura = ?";
+        $params[] = $cultura;
+        $types .= "s";
+    }
+    
+    if (!empty($produto)) {
+        $where_conditions[] = "d.nome_produto = ?";
+        $params[] = $produto;
+        $types .= "s";
+    }
+    
+    if ($id_propriedade !== null) {
+        $where_conditions[] = "d.id_propriedade = ?";
+        $params[] = $id_propriedade;
+        $types .= "i";
+    }
+    
+    if ($id_pasto !== null) {
+        $where_conditions[] = "d.id_pasto = ?";
+        $params[] = $id_pasto;
+        $types .= "i";
+    }
+} else {
+    // Se as colunas não existirem, não usar alias e não incluir filtros de propriedade/pasto
+    $where_conditions[] = "usuario_id = ?";
+    $params[] = $usuario_id;
+    $types = "i";
+    
+    if (!empty($data_inicio)) {
+        $where_conditions[] = "data_aplicacao >= ?";
+        $params[] = $data_inicio;
+        $types .= "s";
+    }
+    
+    if (!empty($data_fim)) {
+        $where_conditions[] = "data_aplicacao <= ?";
+        $params[] = $data_fim;
+        $types .= "s";
+    }
+    
+    if (!empty($cultura)) {
+        $where_conditions[] = "cultura = ?";
+        $params[] = $cultura;
+        $types .= "s";
+    }
+    
+    if (!empty($produto)) {
+        $where_conditions[] = "nome_produto = ?";
+        $params[] = $produto;
+        $types .= "s";
+    }
+    
+    // Não incluir filtros de propriedade e pasto se as colunas não existirem
 }
 
 $where_clause = implode(" AND ", $where_conditions);
 
-// Query base
-$query = "SELECT * FROM defensivos WHERE $where_clause ORDER BY data_aplicacao DESC";
+// Query base com JOIN para propriedade e pasto (se as colunas existirem)
+if ($has_id_propriedade && $has_id_pasto) {
+    $query = "SELECT d.*, 
+              pr.nome as propriedade_nome, 
+              p.nome as pasto_nome 
+              FROM defensivos d 
+              LEFT JOIN propriedades pr ON d.id_propriedade = pr.id_propriedade 
+              LEFT JOIN pastos p ON d.id_pasto = p.id_pasto 
+              WHERE $where_clause 
+              ORDER BY d.data_aplicacao DESC";
+} else {
+    // Se as colunas não existirem, fazer query simples sem JOIN
+    $query = "SELECT *, NULL as propriedade_nome, NULL as pasto_nome 
+              FROM defensivos 
+              WHERE $where_clause 
+              ORDER BY data_aplicacao DESC";
+}
 
 $stmt = $conn->prepare($query);
 if (count($params) > 1) {
@@ -320,6 +392,30 @@ $result->data_seek(0); // Resetar ponteiro novamente
             <?php if (!empty($produto)): ?>
                 <p><strong>Produto:</strong> <?php echo htmlspecialchars($produto); ?></p>
             <?php endif; ?>
+            <?php if ($id_propriedade !== null): 
+                $stmt_prop = $conn->prepare("SELECT nome FROM propriedades WHERE id_propriedade = ?");
+                $stmt_prop->bind_param("i", $id_propriedade);
+                $stmt_prop->execute();
+                $result_prop = $stmt_prop->get_result();
+                if ($row_prop = $result_prop->fetch_assoc()):
+            ?>
+                <p><strong>Propriedade:</strong> <?php echo htmlspecialchars($row_prop['nome']); ?></p>
+            <?php 
+                endif;
+                $stmt_prop->close();
+            endif; ?>
+            <?php if ($id_pasto !== null): 
+                $stmt_pasto = $conn->prepare("SELECT nome FROM pastos WHERE id_pasto = ?");
+                $stmt_pasto->bind_param("i", $id_pasto);
+                $stmt_pasto->execute();
+                $result_pasto = $stmt_pasto->get_result();
+                if ($row_pasto = $result_pasto->fetch_assoc()):
+            ?>
+                <p><strong>Pasto/Área:</strong> <?php echo htmlspecialchars($row_pasto['nome']); ?></p>
+            <?php 
+                endif;
+                $stmt_pasto->close();
+            endif; ?>
         </div>
     </div>
 
@@ -411,6 +507,8 @@ $result->data_seek(0); // Resetar ponteiro novamente
                     <thead>
                         <tr>
                             <th>Produto</th>
+                            <th>Propriedade</th>
+                            <th>Pasto/Área</th>
                             <th>Cultura</th>
                             <th>Data de Aplicação</th>
                             <th>Prazo de Validade</th>
@@ -433,6 +531,8 @@ $result->data_seek(0); // Resetar ponteiro novamente
                         ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($row['nome_produto']); ?></td>
+                                <td><?php echo htmlspecialchars($row['propriedade_nome'] ?? '-'); ?></td>
+                                <td><?php echo htmlspecialchars($row['pasto_nome'] ?? '-'); ?></td>
                                 <td><?php echo htmlspecialchars($row['cultura'] ?? '-'); ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($row['data_aplicacao'])); ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($row['prazo_validade'])); ?></td>
@@ -451,7 +551,7 @@ $result->data_seek(0); // Resetar ponteiro novamente
                         if (!$tem_vencimentos):
                         ?>
                             <tr>
-                                <td colspan="5" class="no-data">Nenhum produto com vencimento próximo ou vencido encontrado.</td>
+                                <td colspan="7" class="no-data">Nenhum produto com vencimento próximo ou vencido encontrado.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
@@ -466,6 +566,8 @@ $result->data_seek(0); // Resetar ponteiro novamente
                     <thead>
                         <tr>
                             <th>Produto</th>
+                            <th>Propriedade</th>
+                            <th>Pasto/Área</th>
                             <th>Cultura</th>
                             <th>Data Aplicação</th>
                             <th>Dosagem</th>
@@ -500,6 +602,8 @@ $result->data_seek(0); // Resetar ponteiro novamente
                         ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($row['nome_produto']); ?></td>
+                                <td><?php echo htmlspecialchars($row['propriedade_nome'] ?? '-'); ?></td>
+                                <td><?php echo htmlspecialchars($row['pasto_nome'] ?? '-'); ?></td>
                                 <td><?php echo htmlspecialchars($row['cultura'] ?? '-'); ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($row['data_aplicacao'])); ?></td>
                                 <td><?php echo htmlspecialchars($row['dosagem'] ?? '-'); ?></td>

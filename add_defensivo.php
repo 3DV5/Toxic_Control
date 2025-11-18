@@ -9,6 +9,32 @@ if (!isset($_SESSION['usuario_id'])) {
 
 $erro = "";
 $sucesso = "";
+$id_pasto = isset($_GET['id_pasto']) ? (int)$_GET['id_pasto'] : null;
+$id_propriedade = null;
+
+// Se id_pasto foi fornecido, buscar a propriedade relacionada
+if ($id_pasto) {
+    $stmt = $conn->prepare("SELECT id_propriedade FROM pastos WHERE id_pasto = ? AND ativo = 1");
+    $stmt->bind_param("i", $id_pasto);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $id_propriedade = $row['id_propriedade'];
+    }
+    $stmt->close();
+}
+
+// Buscar propriedades e pastos para os selects
+$propriedades_query = "SELECT id_propriedade, nome FROM propriedades WHERE usuario_id = ? AND ativo = 1 ORDER BY nome ASC";
+$stmt = $conn->prepare($propriedades_query);
+$stmt->bind_param("i", $_SESSION['usuario_id']);
+$stmt->execute();
+$propriedades_result = $stmt->get_result();
+$propriedades = [];
+while ($row = $propriedades_result->fetch_assoc()) {
+    $propriedades[] = $row;
+}
+$stmt->close();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome_produto = trim($_POST['nome_produto'] ?? '');
@@ -18,6 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $carencia = $_POST['carencia'] ?? null;
     $prazo_validade = $_POST['prazo_validade'] ?? null;
     $observacoes = trim($_POST['observacoes'] ?? '');
+    $id_propriedade_post = !empty($_POST['id_propriedade']) ? (int)$_POST['id_propriedade'] : null;
+    $id_pasto_post = !empty($_POST['id_pasto']) ? (int)$_POST['id_pasto'] : null;
     $usuario_id = $_SESSION['usuario_id'];
 
     // Validações
@@ -42,19 +70,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $prazo_validade_final = $prazo_validade;
         }
         
-        // Preparar statement baseado nos valores NULL
+        // Preparar statement baseado nos valores NULL (incluindo propriedade e pasto)
         if ($carencia_int === null && $prazo_validade_final === null) {
-            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes) VALUES (?, ?, ?, ?, ?, NULL, NULL, ?)");
-            $stmt->bind_param("isssss", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $observacoes);
+            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes, id_propriedade, id_pasto) VALUES (?, ?, ?, ?, ?, NULL, NULL, ?, ?, ?)");
+            $stmt->bind_param("issssssii", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $observacoes, $id_propriedade_post, $id_pasto_post);
         } elseif ($carencia_int === null && $prazo_validade_final !== null) {
-            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes) VALUES (?, ?, ?, ?, ?, NULL, ?, ?)");
-            $stmt->bind_param("issssss", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $prazo_validade_final, $observacoes);
+            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes, id_propriedade, id_pasto) VALUES (?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)");
+            $stmt->bind_param("isssssssii", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $prazo_validade_final, $observacoes, $id_propriedade_post, $id_pasto_post);
         } elseif ($carencia_int !== null && $prazo_validade_final === null) {
-            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes) VALUES (?, ?, ?, ?, ?, ?, NULL, ?)");
-            $stmt->bind_param("issssiss", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $carencia_int, $observacoes);
+            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes, id_propriedade, id_pasto) VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+            $stmt->bind_param("issssissii", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $carencia_int, $observacoes, $id_propriedade_post, $id_pasto_post);
         } else {
-            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("issssiss", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $carencia_int, $prazo_validade_final, $observacoes);
+            $stmt = $conn->prepare("INSERT INTO defensivos (usuario_id, nome_produto, cultura, data_aplicacao, dosagem, carencia, prazo_validade, observacoes, id_propriedade, id_pasto) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("issssissii", $usuario_id, $nome_produto, $cultura, $data_aplicacao, $dosagem, $carencia_int, $prazo_validade_final, $observacoes, $id_propriedade_post, $id_pasto_post);
         }
 
         if ($stmt->execute()) {
@@ -76,9 +104,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registrar Defensivo - Toxic Control</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/header.css">
 <link rel="stylesheet" href="assets/css/add-defensivo.css">
 </head>
 <body>
+<?php 
+$current_page = 'add_defensivo';
+include('includes/header.php'); 
+?>
 <div class="container">
     <h2>Registrar Uso de Defensivo</h2>
     <div class="form-container">
@@ -94,6 +127,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="nome_produto">Nome do Produto <span class="required">*</span></label>
                 <input type="text" id="nome_produto" name="nome_produto" placeholder="Ex: Glifosato 480" value="<?php echo (!empty($sucesso) || !isset($_POST['nome_produto'])) ? '' : htmlspecialchars($_POST['nome_produto']); ?>" required>
             </div>
+            
+            <?php if (!empty($propriedades)): ?>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_propriedade">Propriedade (opcional)</label>
+                    <select id="id_propriedade" name="id_propriedade" onchange="loadPastos(this.value)">
+                        <option value="">Selecione uma propriedade</option>
+                        <?php foreach ($propriedades as $prop): ?>
+                            <option value="<?php echo $prop['id_propriedade']; ?>" <?php echo ($id_propriedade == $prop['id_propriedade']) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($prop['nome']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_pasto">Pasto/Área (opcional)</label>
+                    <select id="id_pasto" name="id_pasto">
+                        <option value="">Selecione um pasto/área</option>
+                        <?php if ($id_pasto): ?>
+                            <?php
+                            $stmt = $conn->prepare("SELECT id_pasto, nome FROM pastos WHERE id_propriedade = ? AND ativo = 1 ORDER BY nome ASC");
+                            $stmt->bind_param("i", $id_propriedade);
+                            $stmt->execute();
+                            $pastos_result = $stmt->get_result();
+                            while ($pasto = $pastos_result->fetch_assoc()):
+                            ?>
+                                <option value="<?php echo $pasto['id_pasto']; ?>" <?php echo ($id_pasto == $pasto['id_pasto']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($pasto['nome']); ?>
+                                </option>
+                            <?php endwhile; ?>
+                            <?php $stmt->close(); ?>
+                        <?php endif; ?>
+                    </select>
+                </div>
+            </div>
+            <?php endif; ?>
             
             <div class="form-row">
                 <div class="form-group">
@@ -137,9 +207,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
         
         <div class="back-link-container">
-            <a href="dashboard.php" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
+            <?php if ($id_pasto): ?>
+                <a href="dashboard_pasto.php?id_pasto=<?php echo $id_pasto; ?>" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Pasto</a>
+            <?php else: ?>
+                <a href="dashboard.php" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
+            <?php endif; ?>
         </div>
     </div>
 </div>
+
+<script>
+function loadPastos(propriedadeId) {
+    const pastoSelect = document.getElementById('id_pasto');
+    pastoSelect.innerHTML = '<option value="">Carregando...</option>';
+    
+    if (!propriedadeId) {
+        pastoSelect.innerHTML = '<option value="">Selecione um pasto/área</option>';
+        return;
+    }
+    
+    fetch('get_pastos.php?id_propriedade=' + propriedadeId)
+        .then(response => response.json())
+        .then(data => {
+            pastoSelect.innerHTML = '<option value="">Selecione um pasto/área</option>';
+            data.forEach(pasto => {
+                const option = document.createElement('option');
+                option.value = pasto.id_pasto;
+                option.textContent = pasto.nome;
+                pastoSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Erro ao carregar pastos:', error);
+            pastoSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+        });
+}
+</script>
+<script src="assets/js/header.js"></script>
 </body>
 </html>
